@@ -2,17 +2,11 @@ version: '3.8'
 
 services:
   jupyter:
-    image: nvidia/cuda:12.8.0-base-ubuntu22.04
-    command: >
-      bash -c "apt-get update && 
-      apt-get install -y python3 python3-pip git wget curl &&
-      pip3 install --no-cache-dir jupyter jupyterlab notebook ipywidgets numpy pandas matplotlib &&
-      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''"
+    # Pre-built image from Docker Hub (build and push your Dockerfile first)
+    # Replace with your Docker Hub username: YOUR-USERNAME/hello-world-launchable:latest
+    image: nvidiaibeer/hello-world-launchable:latest
     ports:
       - "8888:8888"
-    working_dir: /workspace
-    volumes:
-      - ./hello_world.ipynb:/workspace/hello_world.ipynb
     deploy:
       resources:
         reservations:
