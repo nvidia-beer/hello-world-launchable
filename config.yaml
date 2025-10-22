@@ -1,0 +1,19 @@
+# Brev Configuration
+name: hello-world-launchable
+description: A simple GPU test launchable with CUDA 12.8 and Jupyter
+
+# Container configuration
+container:
+  dockerfile: ./Dockerfile
+  context: .
+  
+# Port forwarding for Jupyter
+ports:
+  - 8888:8888
+
+# Resource requirements
+resources:
+  gpu: true
+  gpu_count: 1
+  memory: 16GB
+
