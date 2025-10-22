@@ -47,7 +47,10 @@ Then open http://localhost:8888 in your browser to access JupyterLab.
 
 ## Deploying to Brev
 
-**Important**: Brev does NOT build Docker images from Dockerfiles directly. You must use pre-built images.
+**⚠️ Important Limitations:**
+- Brev does **NOT** build Docker images from Dockerfiles directly. You must use pre-built images.
+- Docker Compose deployments **DO NOT support stop/start** - you can only **terminate and redeploy**.
+- For instances you can stop/start, use "Brev Container" mode instead.
 
 We provide two docker-compose configurations:
 
@@ -72,6 +75,8 @@ Uses `docker-compose.yml` with official NVIDIA NGC container.
    - Memory: **48GB** (recommended for L40S)
    - Ports: **8888** (for Jupyter)
 6. Deploy!
+
+**⚠️ Stop/Start Not Supported**: Docker Compose deployments cannot be stopped and restarted - only terminated and redeployed. Each redeploy will cost time and potentially money. If you need stop/start functionality, use "Brev Container" mode or Option 2 with your own image.
 
 **What it uses:**
 ```yaml
@@ -137,7 +142,11 @@ Once deployed:
 - Execute the `!nvidia-smi` cell to verify GPU access
 - Modify and extend the notebook for your needs
 
-**Important**: Always **stop** your Brev instance when not in use to avoid charges!
+**⚠️ Cost Warning for Docker Compose Deployments:**
+- Docker Compose instances **cannot be stopped** - only terminated
+- You will be charged for the entire time the instance exists
+- **Always terminate** (delete) your instance when done to avoid charges
+- Consider using "Brev Container" mode if you need stop/start functionality to save costs
 
 ## About Brev
 

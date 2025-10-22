@@ -7,10 +7,10 @@ services:
     image: nvcr.io/nvidia/pytorch:24.07-py3
     ports:
       - "8888:8888"
-    volumes:
-      - ./hello_world.ipynb:/workspace/hello_world.ipynb:ro
     command: >
-      bash -c "pip install jupyterlab ipywidgets &&
+      bash -c "
+      pip install jupyterlab ipywidgets &&
+      curl -o /workspace/hello_world.ipynb https://raw.githubusercontent.com/nvidia-beer/hello-world-launchable/main/hello_world.ipynb &&
       jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root 
       --NotebookApp.token='' --NotebookApp.password=''"
     working_dir: /workspace
