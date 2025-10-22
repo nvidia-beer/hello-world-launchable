@@ -4,8 +4,7 @@ description: A simple GPU test launchable with CUDA 12.8 and Jupyter
 
 # Container configuration
 container:
-  dockerfile: ./Dockerfile
-  context: .
+  compose_file: ./docker-compose.yml
   
 # Port forwarding for Jupyter
 ports:
