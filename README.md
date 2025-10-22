@@ -76,7 +76,9 @@ Uses `docker-compose.yml` with official NVIDIA NGC container.
    - Ports: **8888** (for Jupyter)
 6. Deploy!
 
-**⚠️ Stop/Start Not Supported**: Docker Compose deployments cannot be stopped and restarted - only terminated and redeployed. Each redeploy will cost time and potentially money. If you need stop/start functionality, use "Brev Container" mode or Option 2 with your own image.
+**⚠️ Stop/Start Not Supported**: Docker Compose deployments cannot be stopped and restarted - only terminated and redeployed. Each redeploy will download the notebook fresh from GitHub. 
+
+**If you need stop/start functionality:** Use "Brev Container" mode instead, or build your own image with Option 2.
 
 **What it uses:**
 ```yaml
