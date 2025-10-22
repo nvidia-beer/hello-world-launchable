@@ -2,11 +2,16 @@ version: '3.8'
 
 services:
   jupyter:
-    # Pre-built image from Docker Hub (build and push your Dockerfile first)
-    # Replace with your Docker Hub username: YOUR-USERNAME/hello-world-launchable:latest
-    image: nvidiaibeer/hello-world-launchable:latest
+    # Official NVIDIA PyTorch container with JupyterLab
+    # CUDA 12.4 + Python 3.10 + PyTorch 2.4 + JupyterLab pre-installed
+    image: nvcr.io/nvidia/pytorch:24.07-py3
     ports:
       - "8888:8888"
+    command: >
+      bash -c "pip install jupyterlab ipywidgets &&
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root 
+      --NotebookApp.token='' --NotebookApp.password=''"
+    working_dir: /workspace
     deploy:
       resources:
         reservations:

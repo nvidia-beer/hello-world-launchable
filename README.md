@@ -7,19 +7,19 @@ A simple GPU test notebook for Brev deployment. This launchable runs a Jupyter n
 ```
 hello-world-launchable/
 ├── .brev/
-│   └── config.yaml         # Brev configuration
-├── Dockerfile              # CUDA 12.8 + Jupyter setup
-├── docker-compose.yml      # Docker Compose configuration for Brev
-├── setup.sh                # Setup script for Brev Container option
-├── hello_world.ipynb       # Main notebook - runs nvidia-smi
-└── README.md               # This file
+│   └── config.yaml                    # Brev configuration
+├── Dockerfile                         # Custom image: CUDA 12.4 + PyTorch + Jupyter
+├── docker-compose.yml                 # Official NVIDIA PyTorch image (ready to deploy)
+├── docker-compose-custom-docker.yml   # Uses YOUR custom-built Dockerfile image
+├── hello_world.ipynb                  # Main notebook - runs nvidia-smi
+└── README.md                          # This file
 ```
 
 ## What It Does
 
-This launchable provides a custom Docker container with:
-- **CUDA 12.8** base environment
-- **JupyterLab** pre-installed
+This launchable provides GPU-enabled Jupyter environments with:
+- **CUDA 12.4** with PyTorch 2.4
+- **JupyterLab** with data science packages
 - **GPU test notebook** that runs `nvidia-smi`
 - Automatic launch on port 8888
 
@@ -47,58 +47,86 @@ Then open http://localhost:8888 in your browser to access JupyterLab.
 
 ## Deploying to Brev
 
-**Important**: Brev does NOT build Docker images from Dockerfiles directly. You must use pre-built images or setup scripts.
+**Important**: Brev does NOT build Docker images from Dockerfiles directly. You must use pre-built images.
 
-### Option 1: Docker Compose with Pre-Built Image (Recommended)
+We provide two docker-compose configurations:
 
-This option uses your custom Docker image after you build and push it to a registry.
+### Option 1: Official NVIDIA PyTorch Image (Recommended - Easiest) ✅
 
-#### Step 1: Build and Push Your Image
+Uses `docker-compose.yml` with official NVIDIA NGC container.
+
+**Advantages:**
+- ✅ No build required - works immediately
+- ✅ Official NVIDIA image (trusted)
+- ✅ CUDA 12.4 + PyTorch + all GPU libraries
+- ✅ JupyterLab installed automatically
+
+**Deploy on Brev:**
+
+1. In Brev console, create a new Launchable
+2. **Select "Docker Compose"** option
+3. Point to your GitHub repository: `nvidia-beer/hello-world-launchable`
+4. **Compose file**: Use default `docker-compose.yml`
+5. Configure GPU resources:
+   - GPU Type: **L40S, A100, or A10G**
+   - Memory: **48GB** (recommended for L40S)
+   - Ports: **8888** (for Jupyter)
+6. Deploy!
+
+**What it uses:**
+```yaml
+image: nvcr.io/nvidia/pytorch:24.07-py3  # Official NVIDIA container
+# CUDA 12.4 + Python 3.10 + PyTorch 2.4 + JupyterLab
+```
+
+---
+
+### Option 2: Build and Use YOUR Custom Dockerfile
+
+Uses `docker-compose-custom-docker.yml` with YOUR custom-built image from the Dockerfile in this repo.
+
+**Advantages:**
+- ✅ Full control over your environment
+- ✅ Includes your notebook in the image
+- ✅ Based on NVIDIA PyTorch (CUDA 12.4 + PyTorch 2.4)
+- ✅ Your exact package versions
+
+**Steps:**
+
+#### Step 1: Build and Push Your Custom Image
 
 ```bash
-# Build the image
-docker build -t YOUR-DOCKERHUB-USERNAME/hello-world-launchable:latest .
+# Build the image from the Dockerfile
+docker build -t nvidiaibeer/hello-world-launchable:latest .
 
 # Login to Docker Hub
 docker login
 
 # Push to Docker Hub
-docker push YOUR-DOCKERHUB-USERNAME/hello-world-launchable:latest
+docker push nvidiaibeer/hello-world-launchable:latest
 ```
 
-#### Step 2: Update docker-compose.yml
+**Change the image name** to your Docker Hub username:
+- Replace `nvidiaibeer` with your Docker Hub username
+- Update line 17 in `docker-compose-custom-docker.yml` accordingly
 
-Edit `docker-compose.yml` and replace the image line:
-```yaml
-image: YOUR-DOCKERHUB-USERNAME/hello-world-launchable:latest
-```
+#### Step 2: Deploy on Brev
 
-#### Step 3: Deploy on Brev
-
-1. Push your updated repository to GitHub
+1. Push your changes to GitHub
 2. In Brev console, create a new Launchable
 3. **Select "Docker Compose"** option
 4. Point to your GitHub repository
-5. Brev will use `docker-compose.yml` to pull your pre-built image
+5. **Compose file**: Specify `docker-compose-custom-docker.yml`
 6. Configure GPU resources:
-   - GPU Type: L40S, A100, or A10G
-   - Memory: 48GB (recommended for L40S)
-   - Ports: 8888 (for Jupyter)
+   - GPU Type: **L40S, A100, or A10G**
+   - Memory: **48GB**
+   - Ports: **8888**
 7. Deploy!
 
-### Option 2: Brev Container with Setup Script
-
-This uses Brev's built-in Python/CUDA containers and runs a setup script.
-
-1. In Brev console, create a new Launchable
-2. **Select "Brev Container"** option
-3. Configure:
-   - Python Version: 3.10 or 3.11
-   - CUDA Version: 12.x (closest available to 12.8)
-4. Point to your GitHub repository
-5. Brev will automatically run `setup.sh` to install Jupyter and dependencies
-6. Configure GPU resources (L40S, A100, A10G)
-7. Deploy!
+**What it uses:**
+```yaml
+image: nvidiaibeer/hello-world-launchable:latest  # YOUR custom built image
+```
 
 ### Using Jupyter
 

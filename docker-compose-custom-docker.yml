@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  jupyter:
+    # YOUR CUSTOM DOCKER IMAGE built from the Dockerfile in this repo
+    # 
+    # To use this:
+    # 1. Build: docker build -t nvidiaibeer/hello-world-launchable:latest .
+    # 2. Push:  docker push nvidiaibeer/hello-world-launchable:latest
+    # 3. Deploy on Brev with this docker-compose file
+    #
+    # This image has:
+    # - NVIDIA PyTorch base (CUDA 12.4 + Python 3.10)
+    # - JupyterLab + numpy + pandas + matplotlib
+    # - Your hello_world.ipynb notebook included
+    #
+    image: nvidiaibeer/hello-world-launchable:latest
+    ports:
+      - "8888:8888"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+

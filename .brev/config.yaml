@@ -1,6 +1,6 @@
 # Brev Configuration
 name: hello-world-launchable
-description: A simple GPU test launchable with CUDA 12.8 and Jupyter
+description: A simple GPU test launchable with CUDA and Jupyter
 
 # Container configuration
 container:

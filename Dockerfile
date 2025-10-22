@@ -1,21 +1,16 @@
-FROM nvidia/cuda:12.8.0-base-ubuntu22.04
+FROM nvcr.io/nvidia/pytorch:24.07-py3
 
-# Install Python, Jupyter, and essential packages
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    git \
-    wget \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Base image includes:
+# - CUDA 12.4
+# - Python 3.10
+# - PyTorch 2.4 + cuDNN + NCCL
+# - NumPy + other scientific packages
 
-# Install Jupyter and common data science packages
-RUN pip3 install --no-cache-dir \
-    jupyter \
+# Install Jupyter and additional packages
+RUN pip install --no-cache-dir \
     jupyterlab \
     notebook \
     ipywidgets \
-    numpy \
     pandas \
     matplotlib
 
