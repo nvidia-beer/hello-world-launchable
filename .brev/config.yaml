@@ -15,5 +15,5 @@ ports:
 resources:
   gpu: true
   gpu_count: 1
-  memory: 16GB
-
+  gpu_type: L40S  # or "l40s" or "NVIDIA-L40S" - depends on Brev's syntax
+  memory: 48GB  # or higher to support the GPU workload
